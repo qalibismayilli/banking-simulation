@@ -12,6 +12,7 @@ import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.transaction.KafkaTransactionManager;
 
 @Configuration
 public class KafkaConfig {
@@ -49,6 +50,9 @@ public class KafkaConfig {
 	@Value("${spring.kafka.producer.properties.max.in.flight.requests.per.connection}")
 	private int inflightRequests;
 
+	@Value("${spring.kafka.producer.transaction-id-prefix}")
+	private String transactionId;
+
 	public Map<String, Object> producerConfigs() {
 		Map<String, Object> props = new HashMap<>();
 		props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
@@ -58,9 +62,10 @@ public class KafkaConfig {
 		props.put(ProducerConfig.DELIVERY_TIMEOUT_MS_CONFIG, deliveryTimeout);
 		props.put(ProducerConfig.LINGER_MS_CONFIG, linger);
 		props.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, requestTimeout);
-
 		props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, idempotence);
 		props.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, inflightRequests);
+
+		props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, transactionId);
 
 		return props;
 	}
@@ -72,7 +77,12 @@ public class KafkaConfig {
 
 	@Bean
 	KafkaTemplate<String, Object> kafkaTemplate() {
-		return new KafkaTemplate<String, Object>(producerFactory());
+		return new KafkaTemplate<>(producerFactory());
+	}
+
+	@Bean
+	KafkaTransactionManager<String, Object> transactionManager() {
+		return new KafkaTransactionManager<>(producerFactory());
 	}
 
 	@Bean
