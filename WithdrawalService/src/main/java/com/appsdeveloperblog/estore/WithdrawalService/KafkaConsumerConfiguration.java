@@ -32,7 +32,7 @@ import com.appsdeveloperblog.payments.ws.core.error.RetryableException;
 @RequiredArgsConstructor
 public class KafkaConsumerConfiguration {
 
-	Environment environment;
+	private final Environment environment;
 
 	@Bean
 	ConsumerFactory<String, Object> consumerFactory() {
