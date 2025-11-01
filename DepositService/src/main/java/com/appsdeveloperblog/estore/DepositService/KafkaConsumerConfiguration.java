@@ -45,6 +45,7 @@ public class KafkaConsumerConfiguration {
 		config.put(ConsumerConfig.GROUP_ID_CONFIG, environment.getProperty("spring.kafka.consumer.group-id"));
 		config.put(JsonDeserializer.TRUSTED_PACKAGES,
 				environment.getProperty("spring.kafka.consumer.properties.spring.json.trusted.packages"));
+		config.put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, environment.getProperty("spring.kafka.consumer.isolation-level"));
 
 		return new DefaultKafkaConsumerFactory<>(config);
 	}

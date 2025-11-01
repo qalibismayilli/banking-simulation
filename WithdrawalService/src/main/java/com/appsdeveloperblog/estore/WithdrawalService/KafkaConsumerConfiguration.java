@@ -3,6 +3,7 @@ package com.appsdeveloperblog.estore.WithdrawalService;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -28,9 +29,9 @@ import com.appsdeveloperblog.payments.ws.core.error.NotRetryableException;
 import com.appsdeveloperblog.payments.ws.core.error.RetryableException;
 
 @Configuration
+@RequiredArgsConstructor
 public class KafkaConsumerConfiguration {
 
-	@Autowired
 	Environment environment;
 
 	@Bean
@@ -45,6 +46,7 @@ public class KafkaConsumerConfiguration {
 		config.put(ConsumerConfig.GROUP_ID_CONFIG, environment.getProperty("spring.kafka.consumer.group-id"));
 		config.put(JsonDeserializer.TRUSTED_PACKAGES,
 				environment.getProperty("spring.kafka.consumer.properties.spring.json.trusted.packages"));
+		config.put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, environment.getProperty("spring.kafka.consumer.isolation-level"));
 
 		return new DefaultKafkaConsumerFactory<>(config);
 	}

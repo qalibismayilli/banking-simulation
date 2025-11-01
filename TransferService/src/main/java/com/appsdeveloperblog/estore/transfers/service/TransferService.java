@@ -13,7 +13,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+
+import java.net.ConnectException;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +28,7 @@ public class TransferService {
     private final RestTemplate restTemplate;
 
 
+    @Transactional
     public boolean transfer(TransferRestModel transferRestModel) {
         WithdrawalRequestedEvent withdrawalEvent = new WithdrawalRequestedEvent(transferRestModel.getSenderId(),
                 transferRestModel.getRecepientId(), transferRestModel.getAmount());
