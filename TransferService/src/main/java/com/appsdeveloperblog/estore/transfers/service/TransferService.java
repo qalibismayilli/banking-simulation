@@ -31,8 +31,8 @@ public class TransferService {
     private final RestTemplate restTemplate;
     private final TransferRepository transferRepository;
 
-
-    @Transactional("transactionManager")  // TransactionSynchronizationManager
+    @Transactional("transactionManager")
+    // TransactionSynchronizationManager manage kafkaTransactionManager. It is follow acts of jpa transactionManager
     public boolean transfer(TransferRestModel transferRestModel) {
         WithdrawalRequestedEvent withdrawalEvent = new WithdrawalRequestedEvent(transferRestModel.getSenderId(),
                 transferRestModel.getRecepientId(), transferRestModel.getAmount());
@@ -61,7 +61,6 @@ public class TransferService {
             LOGGER.error(ex.getMessage(), ex);
             throw new TransferServiceException(ex);
         }
-
         return true;
     }
 
